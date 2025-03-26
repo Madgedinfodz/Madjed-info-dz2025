@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة المعدل الجامعي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .grades-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .grades-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+        
+        .grades-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .grades-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .input-field, .select-field {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .input-field:focus, .select-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d1146b;
+            transform: translateY(-2px);
+        }
+        
+        .delete-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            transition: background-color 0.3s;
+        }
+        
+        .delete-btn:hover {
+            background-color: #d1146b;
+        }
+        
+        .result-container {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        
+        .result {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .comment {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .gif-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .gif-container img {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .grade-display {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .grades-table th, .grades-table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .input-field, .select-field {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+            
+            .result {
+                font-size: 1.6rem;
+            }
+            
+            .comment {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            body {
+                padding: 10px;
+            }
+            
+            .grades-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>حاسبة المعدل الجامعي</h1>
+            <p>احسب معدلك الجامعي بكل سهولة ودقة</p>
+        </div>
+
+        <table class="grades-table">
+            <thead>
+                <tr>
+                    <th>المادة</th>
+                    <th>المعامل</th>
+                    <th>نوع التقييم</th>
+                    <th>الأعمال (40%)</th>
+                    <th>الامتحان (60%)</th>
+                    <th>المعدل</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="gradesTable">
+            </tbody>
+        </table>
+
+        <div class="buttons-container">
+            <button class="btn btn-primary" onclick="addRow()">
+                <span>إضافة مادة</span>
+            </button>
+            <button class="btn btn-primary" onclick="calculateAverage()">
+                <span>حساب المعدل</span>
+            </button>
+        </div>
+
+        <div class="result-container">
+            <div class="result" id="result">المعدل: --</div>
+            <div class="comment" id="comment"></div>
+            <div class="gif-container" id="gifContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        let rowCount = 0;
+
+        function addRow() {
+            rowCount++;
+            const table = document.getElementById('gradesTable');
+            const row = table.insertRow();
+            row.innerHTML = `
+                <td>المادة ${rowCount}</td>
+                <td><input type="number" class="input-field" id="coefficient${rowCount}" min="1" required></td>
+                <td>
+                    <select class="select-field" id="type${rowCount}" onchange="toggleInputs(${rowCount})">
+                        <option value="both">كلاهما</option>
+                        <option value="tp">أعمال فقط</option>
+                        <option value="exam">امتحان فقط</option>
+                    </select>
+                </td>
+                <td><input type="number" class="input-field" id="tp${rowCount}" min="0" max="20" step="0.01" oninput="calculateGrade(${rowCount})" required></td>
+                <td><input type="number" class="input-field" id="exam${rowCount}" min="0" max="20" step="0.01" oninput="calculateGrade(${rowCount})" required></td>
+                <td class="grade-display" id="grade${rowCount}">--</td>
+                <td><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
+            `;
+        }
+
+        function toggleInputs(row) {
+            const type = document.getElementById(`type${row}`).value;
+            const tpInput = document.getElementById(`tp${row}`);
+            const examInput = document.getElementById(`exam${row}`);
+
+            if (type === 'tp') {
+                tpInput.disabled = false;
+                examInput.disabled = true;
+                examInput.value = '';
+            } else if (type === 'exam') {
+                tpInput.disabled = true;
+                tpInput.value = '';
+                examInput.disabled = false;
+            } else {
+                tpInput.disabled = false;
+                examInput.disabled = false;
+            }
+
+            calculateGrade(row);
+        }
+
+        function calculateGrade(row) {
+            const type = document.getElementById(`type${row}`).value;
+            const tp = parseFloat(document.getElementById(`tp${row}`).value);
+            const exam = parseFloat(document.getElementById(`exam${row}`).value);
+            let grade = 0;
+
+            if (type === 'tp' && !isNaN(tp)) {
+                grade = tp;
+            } else if (type === 'exam' && !isNaN(exam)) {
+                grade = exam;
+            } else if (type === 'both' && !isNaN(tp) && !isNaN(exam)) {
+                grade = (tp * 0.4) + (exam * 0.6);
+            }
+
+            document.getElementById(`grade${row}`).innerText = !isNaN(grade) ? grade.toFixed(2) : '--';
+        }
+
+        function deleteRow(button) {
+            const row = button.parentElement.parentElement;
+            row.remove();
+            updateRowNumbers();
+        }
+
+        function updateRowNumbers() {
+            const rows = document.getElementById('gradesTable').rows;
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].cells[0].innerText = `المادة ${i + 1}`;
+            }
+            rowCount = rows.length;
+        }
+
+        function calculateAverage() {
+            let totalGrade = 0;
+            let totalCoefficient = 0;
+
+            for (let i = 1; i <= rowCount; i++) {
+                const gradeElement = document.getElementById(`grade${i}`);
+                const grade = parseFloat(gradeElement.innerText);
+                const coefficient = parseFloat(document.getElementById(`coefficient${i}`).value);
+                
+                if (!isNaN(grade) {
+                    gradeElement.style.color = getGradeColor(grade);
+                }
+                
+                if (!isNaN(grade) && !isNaN(coefficient)) {
+                    totalGrade += grade * coefficient;
+                    totalCoefficient += coefficient;
+                }
+            }
+
+            if (totalCoefficient > 0) {
+                const average = totalGrade / totalCoefficient;
+                document.getElementById('result').innerText = `المعدل: ${average.toFixed(2)}`;
+                displayComment(average);
+            } else {
+                document.getElementById('result').innerText = `المعدل: --`;
+                document.getElementById('comment').innerText = '';
+                document.getElementById('gifContainer').innerHTML = '';
+            }
+        }
+
+        function getGradeColor(grade) {
+            if (grade < 10) return '#f72585';
+            if (grade < 12) return '#f8961e';
+            if (grade < 14) return '#4cc9f0';
+            if (grade < 16) return '#4895ef';
+            return '#4361ee';
+        }
+
+        function displayComment(average) {
+            const comment = document.getElementById('comment');
+            const gifContainer = document.getElementById('gifContainer');
+            gifContainer.innerHTML = '';
+
+            if (average < 10) {
+                comment.innerText = "حاول مرة أخرى في الفصل القادم!";
+                gifContainer.innerHTML = '<img src="https://media.giphy.com/media/GwJySDxO1vWXRV76lB/giphy.gif" alt="حاول مرة أخرى">';
+            } else if (average >= 10 && average < 12) {
+                comment.innerText = "ناجح، يمكنك التحسن أكثر!";
+                gifContainer.innerHTML = '<img src="https://media.giphy.com/media/pynZagVcYxVUk/giphy.gif" alt="ناجح">';
+            } else if (average >= 12 && average < 16) {
+                comment.innerText = "معدل جيد، أحسنت!";
+                gifContainer.innerHTML = '<img src="https://media.giphy.com/media/pcKnpFrumIM7TtzayE/giphy.gif" alt="معدل جيد">';
+            } else if (average >= 16) {
+                comment.innerText = "ممتاز! أنت متميز!";
+                gifContainer.innerHTML = '<img src="https://media.giphy.com/media/LCo3JuJ8ca3XXJQqlM/giphy.gif" alt="ممتاز">';
+            }
+        }
+    </script>
+</body>
+</html>
